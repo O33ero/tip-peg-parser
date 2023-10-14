@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 public class BodyStatement implements Statement {
-    private List<Statement> list = new ArrayList<>();
+    private List<Statement> statements = new ArrayList<>();
 
     @Override
     public StmToken getToken() {
@@ -23,6 +23,6 @@ public class BodyStatement implements Statement {
 
     @Override
     public String toString() {
-        return String.format("{ %s }", list);
+        return String.format("{ %s }", statements);
     }
 }

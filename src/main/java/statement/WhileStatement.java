@@ -9,7 +9,7 @@ import token.StmToken;
 @RequiredArgsConstructor
 public class WhileStatement implements StatementContainer {
     private final Expression condition;
-    private final BodyStatement bodyContainer = new BodyStatement();
+    private final BodyStatement body = new BodyStatement();
 
     @Override
     public StmToken getToken() {
@@ -18,11 +18,11 @@ public class WhileStatement implements StatementContainer {
 
     @Override
     public String toString() {
-        return String.format("while (%s) %s ", condition, bodyContainer);
+        return String.format("while (%s) %s ", condition, body);
     }
 
     @Override
     public void put(Statement statement) {
-        bodyContainer.getList().add(statement);
+        body.getStatements().add(statement);
     }
 }

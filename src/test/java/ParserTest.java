@@ -1,3 +1,4 @@
+import exception.UnexpectedElseStatement;
 import exception.UnrecognizedTokenException;
 import lexer.TIPLexer;
 import org.junit.jupiter.api.Test;
@@ -91,5 +92,27 @@ class ParserTest {
                     } 
                 """;
         assertThrows(UnrecognizedTokenException.class, () -> payload(code));
+    }
+
+    @Test
+    void test7() {
+        String code = """
+                x = 10;           
+                else  {
+                    output x; 
+                    } 
+                """;
+        assertThrows(UnexpectedElseStatement.class, () -> payload(code));
+    }
+
+    @Test
+    void test8() {
+        String code = """
+                x = 10;           
+                if (x > 10)  {
+                    output x; 
+                    } 
+                """;
+        assertDoesNotThrow(() -> payload(code));
     }
 }

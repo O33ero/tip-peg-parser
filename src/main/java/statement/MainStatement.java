@@ -18,7 +18,7 @@ public class MainStatement implements Statement, StatementContainer {
 
     @Override
     public void put(Statement statement) {
-        body.getList().add(statement);
+        body.getStatements().add(statement);
     }
 
     @Override

@@ -2,6 +2,7 @@ package lexer;
 
 import exception.CannotRecognizeTokenException;
 import exception.LexicalException;
+import exception.UnexpectedElseStatement;
 import exception.UnrecognizedTokenException;
 import expression.*;
 import org.apache.logging.log4j.LogManager;
@@ -56,7 +57,36 @@ public class TIPLexer {
             throw new LexicalException("Cannot to resolve: " + headStatement.peek());
         }
 
-        return (MainStatement) headStatement.pop();
+        MainStatement mainStatement = (MainStatement) headStatement.pop();
+        testIfElseGrouping(mainStatement.getBody().getStatements());
+
+        return mainStatement;
+
+    }
+
+    private static void testIfElseGrouping(List<Statement> statements) {
+        Queue<Statement> headStatements = new ArrayDeque<>(statements);
+
+        IfStatement headIf = null;
+        while (!headStatements.isEmpty()) {
+            Statement current = headStatements.poll();
+            switch (current) {
+                case IfStatement ifStatement -> {
+                    headIf = ifStatement;
+                    headStatements.addAll(ifStatement.getBody().getStatements());
+                }
+                case ElseStatement elseStatement -> {
+                    if (headIf == null) {
+                        throw new UnexpectedElseStatement("Unexpected statement: " + elseStatement);
+                    } else {
+                        headIf = null;
+                    }
+                }
+                case WhileStatement whileStatement -> headStatements.addAll(whileStatement.getBody().getStatements());
+                default -> {
+                }
+            }
+        }
     }
 
     public static List<Statement> statementLexer(List<String> lines) {

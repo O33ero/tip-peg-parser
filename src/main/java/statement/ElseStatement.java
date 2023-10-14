@@ -24,6 +24,6 @@ public class ElseStatement implements StatementContainer {
 
     @Override
     public void put(Statement statement) {
-        body.getList().add(statement);
+        body.getStatements().add(statement);
     }
 }
