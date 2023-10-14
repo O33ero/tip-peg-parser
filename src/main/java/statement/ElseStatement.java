@@ -11,7 +11,6 @@ import token.StmToken;
 @NoArgsConstructor
 public class ElseStatement implements StatementContainer {
     private final BodyStatement body = new BodyStatement();
-    private IfStatement ifStatement;
 
     @Override
     public StmToken getToken() {
