@@ -23,6 +23,6 @@ public class WhileStatement implements StatementContainer {
 
     @Override
     public void put(Statement statement) {
-        bodyContainer.getBody().add(statement);
+        bodyContainer.getList().add(statement);
     }
 }

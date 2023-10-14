@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class Id implements AtomicExpression{
+public class IdExpression implements AtomicExpression{
     private String value;
 
     @Override

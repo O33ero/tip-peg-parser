@@ -165,7 +165,7 @@ public class TIPLexer {
                     Matcher matcher = token.getValue().matcher(str);
                     if (matcher.find()) {
                         return switch (token.getKey()) {
-                            case ID -> new Id(matcher.group(1));
+                            case ID -> new IdExpression(matcher.group(1));
                             case INT -> new IntExpression(matcher.group(1));
                         };
                     }
