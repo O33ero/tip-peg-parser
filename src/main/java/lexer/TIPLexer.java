@@ -56,36 +56,7 @@ public class TIPLexer {
             throw new LexicalException("Cannot to resolve: " + headStatement.peek());
         }
 
-        //        result.setBody(ifElseStatementGrouper(result.getBody()));
-
         return (MainStatement) headStatement.pop();
-    }
-
-    private static BodyStatement ifElseStatementGrouper(BodyStatement body) {
-        Queue<Statement> headStatement = new ArrayDeque<>(body.getBody());
-
-        IfStatement headIf = null;
-        while (!headStatement.isEmpty()) {
-            Statement statement = headStatement.poll();
-            switch (statement) {
-                case IfStatement ifStatement -> headIf = ifStatement;
-                case ElseStatement elseStatement -> {
-                    if (headIf == null) {
-                        throw new LexicalException("Cannot to resolve: " + elseStatement);
-                    } else {
-//                        headIf.setElseStatement(elseStatement);
-                        headIf = null;
-                    }
-                }
-                case WhileStatement whileStatement -> headStatement.addAll(whileStatement.getBodyContainer().getBody());
-                default -> {
-                }
-            }
-        }
-
-        return new BodyStatement(body.getBody().stream()
-                .filter(statement -> statement instanceof ElseStatement)
-                .toList());
     }
 
     public static List<Statement> statementLexer(List<String> lines) {
