@@ -1,6 +1,7 @@
 package lexer;
 
 import exception.CannotRecognizeTokenException;
+import exception.LexicalException;
 import exception.UnrecognizedTokenException;
 import expression.*;
 import org.apache.logging.log4j.LogManager;
@@ -11,10 +12,7 @@ import token.ExpToken;
 import token.StmToken;
 import token.Token;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,19 +23,72 @@ public class TIPLexer {
     private TIPLexer() {
     }
 
-    public static List<Statement> tokenize(Stream<String> lines) {
+    public static MainStatement tokenize(Stream<String> lines) {
         List<String> flatedLines = lineFlatter(lines).toList();
         List<Statement> statementToken = statementLexer(flatedLines);
-//        List<Statement> statementGrouped = statementGrouper(statementToken);
+        MainStatement mainStatement = statementGrouper(statementToken);
 
-        return statementToken;
+        return mainStatement;
     }
 
-    public static List<Statement> statementGrouper(List<StmToken> statementToken) {
-        return null;
+    public static MainStatement statementGrouper(List<Statement> statementToken) {
+        Iterator<Statement> iterator = statementToken.iterator();
+        Stack<StatementContainer> headStatement = new Stack<>();
+        headStatement.push(new MainStatement());
+
+        while (iterator.hasNext()) {
+            Statement current = iterator.next();
+            switch (current) {
+                case IfStatement ifStatement -> headStatement.push(ifStatement);
+                case WhileStatement whileStatement -> headStatement.push(whileStatement);
+                case ElseStatement elseStatement -> headStatement.push(elseStatement);
+                case EndBodyStatement ignored -> {
+                    StatementContainer currentHead = headStatement.pop();
+                    headStatement.peek().put(currentHead);
+                }
+                // IOStatement -> default
+                // EqualsStatement -> default
+                default -> headStatement.peek().put(current);
+            }
+        }
+
+        if (!(headStatement.size() == 1 && headStatement.peek() instanceof MainStatement)) {
+            throw new LexicalException("Cannot to resolve: " + headStatement.peek());
+        }
+
+        //        result.setBody(ifElseStatementGrouper(result.getBody()));
+
+        return (MainStatement) headStatement.pop();
     }
 
-    private static List<Statement> statementLexer(List<String> lines) {
+    private static BodyStatement ifElseStatementGrouper(BodyStatement body) {
+        Queue<Statement> headStatement = new ArrayDeque<>(body.getBody());
+
+        IfStatement headIf = null;
+        while (!headStatement.isEmpty()) {
+            Statement statement = headStatement.poll();
+            switch (statement) {
+                case IfStatement ifStatement -> headIf = ifStatement;
+                case ElseStatement elseStatement -> {
+                    if (headIf == null) {
+                        throw new LexicalException("Cannot to resolve: " + elseStatement);
+                    } else {
+//                        headIf.setElseStatement(elseStatement);
+                        headIf = null;
+                    }
+                }
+                case WhileStatement whileStatement -> headStatement.addAll(whileStatement.getBodyContainer().getBody());
+                default -> {
+                }
+            }
+        }
+
+        return new BodyStatement(body.getBody().stream()
+                .filter(statement -> statement instanceof ElseStatement)
+                .toList());
+    }
+
+    public static List<Statement> statementLexer(List<String> lines) {
         Iterator<String> iterator = lines.iterator();
         List<Statement> output = new ArrayList<>();
 
@@ -89,7 +140,7 @@ public class TIPLexer {
                                     case WHILE_EXP -> new WhileStatement(tryToGuessExpression(matcher.group(1)));
                                     case IF_ELSE -> new ElseStatement();
                                     case IO_EXP -> new IOStatement(matcher.group(1), tryToGuessExpression(matcher.group(2)));
-                                    case END_STM -> new BodyStatement();
+                                    case END_STM -> new EndBodyStatement();
                                     case ID_EQ_EXP ->
                                             new EqualStatement(matcher.group(1), tryToGuessExpression(matcher.group(2)));
                                 };

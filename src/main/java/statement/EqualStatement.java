@@ -18,6 +18,6 @@ public class EqualStatement implements Statement {
 
     @Override
     public String toString() {
-        return String.format("[ %s = %s ]", id, expression);
+        return String.format("%s = %s ; ", id, expression);
     }
 }

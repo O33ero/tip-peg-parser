@@ -10,6 +10,6 @@ public class BoxExpression implements Expression {
 
     @Override
     public String toString() {
-        return String.format("[ ( %s ) ]", expression);
+        return String.format("( %s ) ", expression);
     }
 }

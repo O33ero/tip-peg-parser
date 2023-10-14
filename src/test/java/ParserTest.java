@@ -1,6 +1,7 @@
 import exception.UnrecognizedTokenException;
 import lexer.TIPLexer;
 import org.junit.jupiter.api.Test;
+import statement.MainStatement;
 import statement.Statement;
 
 import java.util.Arrays;
@@ -11,11 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ParserTest {
     private static void payload(String code) {
-        List<Statement> tokens = TIPLexer.tokenize(Arrays.stream(code.split("\n")));
         List<String> flat = TIPLexer.lineFlatter(Arrays.stream(code.split("\n"))).toList();
+        List<Statement> lexer = TIPLexer.statementLexer(flat);
+        MainStatement grouped = TIPLexer.statementGrouper(lexer);
 
         System.out.println("Flat: " + flat);
-        System.out.println("Tokens: " + tokens);
+        System.out.println("Tokens: " + lexer);
+        System.out.println("Grouped: " + grouped);
     }
 
     @Test

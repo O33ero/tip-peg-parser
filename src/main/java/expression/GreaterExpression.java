@@ -8,6 +8,6 @@ public class GreaterExpression extends BiExpression {
 
     @Override
     public String toString() {
-        return String.format("[ %s > %s]", getLeft(), getRight());
+        return String.format("%s > %s", getLeft(), getRight());
     }
 }

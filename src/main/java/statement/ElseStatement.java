@@ -5,15 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import token.StmToken;
-import token.Token;
-
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class ElseStatement implements Statement {
-    private List<Token> body;
+public class ElseStatement implements StatementContainer {
+    private final BodyStatement body = new BodyStatement();
     private IfStatement ifStatement;
 
     @Override
@@ -23,6 +20,11 @@ public class ElseStatement implements Statement {
 
     @Override
     public String toString() {
-        return String.format("[else { %s }]", body);
+        return String.format("else { %s ", body);
+    }
+
+    @Override
+    public void put(Statement statement) {
+        body.getBody().add(statement);
     }
 }

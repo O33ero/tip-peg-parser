@@ -3,18 +3,13 @@ package statement;
 import expression.Expression;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import token.StmToken;
-import token.Token;
-
-import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class WhileStatement implements Statement {
+public class WhileStatement implements StatementContainer {
     private final Expression condition;
-    @Setter
-    private List<Token> body;
+    private final BodyStatement bodyContainer = new BodyStatement();
 
     @Override
     public StmToken getToken() {
@@ -23,6 +18,11 @@ public class WhileStatement implements Statement {
 
     @Override
     public String toString() {
-        return String.format("while (%s) { %s }", condition, body);
+        return String.format("while (%s) %s ", condition, bodyContainer);
+    }
+
+    @Override
+    public void put(Statement statement) {
+        bodyContainer.getBody().add(statement);
     }
 }

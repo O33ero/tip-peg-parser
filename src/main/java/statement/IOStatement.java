@@ -18,6 +18,6 @@ public class IOStatement implements Statement {
 
     @Override
     public String toString() {
-        return String.format("[ %s %s ]", operation, expression);
+        return String.format("%s %s ; ", operation, expression);
     }
 }

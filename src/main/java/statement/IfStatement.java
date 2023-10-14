@@ -3,20 +3,13 @@ package statement;
 import expression.Expression;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import token.StmToken;
-import token.Token;
-
-import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class IfStatement implements Statement {
+public class IfStatement implements Statement, StatementContainer {
     private final Expression condition;
-    @Setter
-    private List<Token> body;
-    @Setter
-    private ElseStatement elseStatement;
+    private final BodyStatement body = new BodyStatement();
 
     @Override
     public StmToken getToken() {
@@ -25,6 +18,11 @@ public class IfStatement implements Statement {
 
     @Override
     public String toString() {
-        return String.format("[if (%s) { %s }]", condition, body);
+        return String.format("if (%s) %s ", condition, body);
+    }
+
+    @Override
+    public void put(Statement statement) {
+        body.getBody().add(statement);
     }
 }
