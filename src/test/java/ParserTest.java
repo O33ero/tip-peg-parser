@@ -1,3 +1,4 @@
+import exception.LexicalException;
 import exception.UnexpectedElseStatement;
 import exception.UnrecognizedTokenException;
 import lexer.TIPLexer;
@@ -111,6 +112,27 @@ class ParserTest {
                 x = 10;           
                 if (x > 10)  {
                     output x; 
+                    } 
+                """;
+        assertDoesNotThrow(() -> payload(code));
+    }
+
+    @Test
+    void test9() {
+        String code = """
+                x = 10;           
+                if (x > 10) while (x > 10)  {
+                    output x; 
+                    } 
+                """;
+        assertThrows(LexicalException.class, () -> payload(code));
+    }
+
+    @Test
+    void test10() {
+        String code = """
+                x = 10;           
+                if (x > 10)   { 
                     } 
                 """;
         assertDoesNotThrow(() -> payload(code));
