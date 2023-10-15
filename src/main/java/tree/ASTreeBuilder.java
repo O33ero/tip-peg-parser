@@ -28,40 +28,56 @@ public class ASTreeBuilder {
         levelStack.push(rootStatement.getBody().getStatements().size());
 
         while (!statementStack.isEmpty()) {
-            int currentLevel = levelStack.size();
+            if (levelStack.peek() == 0) {
+                levelStack.pop();
+            }
             Statement current = statementStack.pop();
-            reduceReminderOrPop();
             switch (current) {
                 case OutputStatement outputStatement -> {
-                    stringBuilder.append("\t".repeat(currentLevel)).append("output: ").append(outputStatement.getExpression()).append("\n");
+                    stringBuilder.append(getOffset()).append("output: ").append(outputStatement.getExpression()).append("\n");
+                    reduceLevelReminderOrPop();
                 }
                 case EqualStatement equalStatement -> {
-                    stringBuilder.append("\t".repeat(currentLevel)).append(equalStatement.getId()).append(" = ").append(equalStatement.getExpression()).append("\n");
+                    stringBuilder.append(getOffset()).append(equalStatement.getId()).append(" = ").append(equalStatement.getExpression()).append("\n");
+                    reduceLevelReminderOrPop();
                 }
                 case IfStatement ifStatement -> {
-                    stringBuilder.append("\t".repeat(currentLevel)).append("if ").append(ifStatement.getCondition()).append(" is true ↴").append("\n");
+                    stringBuilder.append(getOffset()).append("if ").append(ifStatement.getCondition()).append(" is true ↴").append("\n");
+                    reduceLevelReminderWithoutPop();
                     pushToStatementsStack(ifStatement);
                 }
                 case ElseStatement elseStatement -> {
-                    stringBuilder.append("\t".repeat(currentLevel)).append("else ").append("↴").append("\n");
+                    stringBuilder.append(getOffset()).append("else ").append("↴").append("\n");
+                    reduceLevelReminderWithoutPop();
                     pushToStatementsStack(elseStatement);
                 }
                 case WhileStatement whileStatement -> {
-                    stringBuilder.append("\t".repeat(currentLevel)).append("while ").append(whileStatement.getCondition()).append(" is true ↴").append("\n");
+                    stringBuilder.append(getOffset()).append("while ").append(whileStatement.getCondition()).append(" is true ↴").append("\n");
+                    reduceLevelReminderWithoutPop();
                     pushToStatementsStack(whileStatement);
                 }
                 default -> throw new IllegalArgumentException("Cannot resolve statement: " + current);
             }
+
         }
 
         return stringBuilder.toString();
     }
 
-    private void reduceReminderOrPop() {
-        int reminderStatementCountOnCurrentLevel = levelStack.peek() - 1;
-        if (reminderStatementCountOnCurrentLevel == 0) {
-            levelStack.pop();
+    private String getOffset() {
+        return "\t".repeat(levelStack.size());
+    }
+
+    private void reduceLevelReminderOrPop() {
+        int reminderStatementCountOnCurrentLevel = levelStack.pop() - 1;
+        if (reminderStatementCountOnCurrentLevel > 0) {
+            levelStack.push(reminderStatementCountOnCurrentLevel);
         }
+    }
+
+    private void reduceLevelReminderWithoutPop() {
+        int reminderStatementCountOnCurrentLevel = levelStack.pop() - 1;
+        levelStack.push(reminderStatementCountOnCurrentLevel);
     }
 
     private void pushToStatementsStack(StatementContainer statementContainer) {
