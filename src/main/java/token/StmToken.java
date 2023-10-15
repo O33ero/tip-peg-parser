@@ -14,7 +14,7 @@ public enum StmToken implements Token {
     IF_EXP("IF_EXP", "if \\( (.*) \\)"),
     IF_ELSE("ELSE_STM", "else "),
     WHILE_EXP("WHILE_EXP_THEN_STM", "while \\( (.*) \\)"),
-    END_STM("WHILE_EXP_THEN_STM", "\\{(.*)\\}"),
+    END_STM("WHILE_EXP_THEN_STM", "\\{ \\}"),
     ID_EQ_EXP("ID_EQ_EXP", "([a-zA-Z]+) \\= (.*) ;"),
     OUTPUT_EXP("OUTPUT_EXP", "(output) (.*) ;")
     ;
