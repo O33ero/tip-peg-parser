@@ -24,18 +24,18 @@ public class TIPLexer {
     private TIPLexer() {
     }
 
-    public static MainStatement tokenize(Stream<String> lines) {
+    public static RootStatement tokenize(Stream<String> lines) {
         List<String> flatedLines = lineFlatter(lines).toList();
         List<Statement> statementToken = statementLexer(flatedLines);
-        MainStatement mainStatement = statementGrouper(statementToken);
+        RootStatement rootStatement = statementGrouper(statementToken);
 
-        return mainStatement;
+        return rootStatement;
     }
 
-    public static MainStatement statementGrouper(List<Statement> statementToken) {
+    public static RootStatement statementGrouper(List<Statement> statementToken) {
         Iterator<Statement> iterator = statementToken.iterator();
         Stack<StatementContainer> headStatement = new Stack<>();
-        headStatement.push(new MainStatement());
+        headStatement.push(new RootStatement());
 
         while (iterator.hasNext()) {
             Statement current = iterator.next();
@@ -53,14 +53,14 @@ public class TIPLexer {
             }
         }
 
-        if (!(headStatement.size() == 1 && headStatement.peek() instanceof MainStatement)) {
+        if (!(headStatement.size() == 1 && headStatement.peek() instanceof RootStatement)) {
             throw new LexicalException("Cannot to resolve: " + headStatement.peek());
         }
 
-        MainStatement mainStatement = (MainStatement) headStatement.pop();
-        testIfElseGrouping(mainStatement.getBody().getStatements());
+        RootStatement rootStatement = (RootStatement) headStatement.pop();
+        testIfElseGrouping(rootStatement.getBody().getStatements());
 
-        return mainStatement;
+        return rootStatement;
 
     }
 
@@ -140,7 +140,7 @@ public class TIPLexer {
                                     case IF_EXP -> new IfStatement(tryToGuessExpression(matcher.group(1)));
                                     case WHILE_EXP -> new WhileStatement(tryToGuessExpression(matcher.group(1)));
                                     case IF_ELSE -> new ElseStatement();
-                                    case OUTPUT_EXP -> new OutputExpression(matcher.group(1), tryToGuessExpression(matcher.group(2)));
+                                    case OUTPUT_EXP -> new OutputStatement(matcher.group(1), tryToGuessExpression(matcher.group(2)));
                                     case END_STM -> new EndBodyStatement();
                                     case ID_EQ_EXP ->
                                             new EqualStatement(matcher.group(1), tryToGuessExpression(matcher.group(2)));

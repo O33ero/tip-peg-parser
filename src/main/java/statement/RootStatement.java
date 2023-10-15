@@ -5,10 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import token.StmToken;
 
+import java.util.List;
+
 @Setter
 @Getter
 @RequiredArgsConstructor
-public class MainStatement implements Statement, StatementContainer {
+public class RootStatement implements Statement, StatementContainer {
     private BodyStatement body = new BodyStatement();
 
     @Override
@@ -22,7 +24,14 @@ public class MainStatement implements Statement, StatementContainer {
     }
 
     @Override
+    public List<Statement> getBodyStatements() {
+        return body.getStatements();
+    }
+
+    @Override
     public String toString() {
         return body.toString();
     }
+
+
 }

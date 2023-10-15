@@ -7,7 +7,7 @@ import token.StmToken;
 
 @Getter
 @AllArgsConstructor
-public class OutputExpression implements Statement {
+public class OutputStatement implements Statement {
     private String operation;
     private Expression expression;
 

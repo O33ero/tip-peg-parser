@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import token.StmToken;
 
+import java.util.List;
+
 @Getter
 @RequiredArgsConstructor
 public class IfStatement implements Statement, StatementContainer {
@@ -24,5 +26,10 @@ public class IfStatement implements Statement, StatementContainer {
     @Override
     public void put(Statement statement) {
         body.getStatements().add(statement);
+    }
+
+    @Override
+    public List<Statement> getBodyStatements() {
+        return body.getStatements();
     }
 }

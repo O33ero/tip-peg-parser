@@ -3,8 +3,10 @@ import exception.UnexpectedElseStatement;
 import exception.UnrecognizedTokenException;
 import lexer.TIPLexer;
 import org.junit.jupiter.api.Test;
-import statement.MainStatement;
+import statement.RootStatement;
 import statement.Statement;
+import tree.ASTree;
+import tree.ASTreeBuilder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,11 +18,14 @@ class ParserTest {
     private static void payload(String code) {
         List<String> flat = TIPLexer.lineFlatter(Arrays.stream(code.split("\n"))).toList();
         List<Statement> lexer = TIPLexer.statementLexer(flat);
-        MainStatement grouped = TIPLexer.statementGrouper(lexer);
+        RootStatement root = TIPLexer.statementGrouper(lexer);
+
+        ASTree tree = ASTreeBuilder.build(root);
 
         System.out.println("Flat: " + flat);
         System.out.println("Tokens: " + lexer);
-        System.out.println("Grouped: " + grouped);
+        System.out.println("Grouped: " + root);
+        System.out.println(tree);
     }
 
     @Test

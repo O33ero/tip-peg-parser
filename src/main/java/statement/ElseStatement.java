@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import token.StmToken;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,5 +27,10 @@ public class ElseStatement implements StatementContainer {
     @Override
     public void put(Statement statement) {
         body.getStatements().add(statement);
+    }
+
+    @Override
+    public List<Statement> getBodyStatements() {
+        return body.getStatements();
     }
 }
