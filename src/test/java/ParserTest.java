@@ -1,4 +1,3 @@
-import exception.CannotRecognizeTokenException;
 import exception.LexicalException;
 import exception.UnexpectedElseStatement;
 import exception.UnrecognizedTokenException;

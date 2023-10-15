@@ -5,8 +5,8 @@ import exception.LexicalException;
 import exception.UnexpectedElseStatement;
 import exception.UnrecognizedTokenException;
 import expression.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import statement.*;
 import token.AtomicToken;
 import token.ExpToken;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TIPLexer {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LoggerFactory.getLogger(TIPLexer.class);
 
     private TIPLexer() {
     }
