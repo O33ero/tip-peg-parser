@@ -22,7 +22,7 @@ public class ASTreeBuilder {
     }
 
     private String decomposeRoot(RootStatement rootStatement) {
-        StringBuilder stringBuilder = new StringBuilder("root ↴").append("\n");
+        StringBuilder stringBuilder = new StringBuilder("root ↓").append("\n");
 
         rootStatement.getBody().getStatements().reversed().forEach(statementStack::push);
         levelStack.push(rootStatement.getBody().getStatements().size());
@@ -42,17 +42,17 @@ public class ASTreeBuilder {
                     reduceLevelReminderOrPop();
                 }
                 case IfStatement ifStatement -> {
-                    stringBuilder.append(getOffset()).append("if ").append(ifStatement.getCondition()).append(" is true ↴").append("\n");
+                    stringBuilder.append(getOffset()).append("if ").append(ifStatement.getCondition()).append(" is true ↓").append("\n");
                     reduceLevelReminderWithoutPop();
                     pushToStatementsStack(ifStatement);
                 }
                 case ElseStatement elseStatement -> {
-                    stringBuilder.append(getOffset()).append("else ").append("↴").append("\n");
+                    stringBuilder.append(getOffset()).append("else ").append("↓").append("\n");
                     reduceLevelReminderWithoutPop();
                     pushToStatementsStack(elseStatement);
                 }
                 case WhileStatement whileStatement -> {
-                    stringBuilder.append(getOffset()).append("while ").append(whileStatement.getCondition()).append(" is true ↴").append("\n");
+                    stringBuilder.append(getOffset()).append("while ").append(whileStatement.getCondition()).append(" is true ↺").append("\n");
                     reduceLevelReminderWithoutPop();
                     pushToStatementsStack(whileStatement);
                 }
@@ -65,7 +65,7 @@ public class ASTreeBuilder {
     }
 
     private String getOffset() {
-        return "\t".repeat(levelStack.size());
+        return "    ".repeat(levelStack.size());
     }
 
     private void reduceLevelReminderOrPop() {
