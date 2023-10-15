@@ -140,7 +140,8 @@ public class TIPLexer {
                                     case IF_EXP -> new IfStatement(tryToGuessExpression(matcher.group(1)));
                                     case WHILE_EXP -> new WhileStatement(tryToGuessExpression(matcher.group(1)));
                                     case IF_ELSE -> new ElseStatement();
-                                    case OUTPUT_EXP -> new OutputStatement(matcher.group(1), tryToGuessExpression(matcher.group(2)));
+                                    case OUTPUT_EXP ->
+                                            new OutputStatement(matcher.group(1), tryToGuessExpression(matcher.group(2)));
                                     case END_STM -> new EndBodyStatement();
                                     case ID_EQ_EXP ->
                                             new EqualStatement(matcher.group(1), tryToGuessExpression(matcher.group(2)));
@@ -160,28 +161,27 @@ public class TIPLexer {
                     return matcher.find();
                 }).findFirst()
                 .map(token -> {
-                    Matcher matcher = token.getValue().matcher(str);
-                    if (matcher.find()) {
-                        return switch (token.getKey()) {
-                            case EXP_BOX -> new BoxExpression(tryToGuessExpression(matcher.group(1)));
-                            case EXP_PLUS_EXP ->
-                                    new PlusExpression(tryToGuessExpression(matcher.group(1)), tryToGuessExpression(matcher.group(2)));
-                            case EXP_MINUS_EXP ->
-                                    new MinusExpression(tryToGuessExpression(matcher.group(1)), tryToGuessExpression(matcher.group(2)));
-                            case EXP_MULTI_EXP ->
-                                    new MultiExpression(tryToGuessExpression(matcher.group(1)), tryToGuessExpression(matcher.group(2)));
-                            case EXP_DIV_EXP ->
-                                    new DivExpression(tryToGuessExpression(matcher.group(1)), tryToGuessExpression(matcher.group(2)));
-                            case EXP_EQ_EXP ->
-                                    new EqualExpression(tryToGuessExpression(matcher.group(1)), tryToGuessExpression(matcher.group(2)));
-                            case EXP_GRT_EXP ->
-                                    new GreaterExpression(tryToGuessExpression(matcher.group(1)), tryToGuessExpression(matcher.group(2)));
-                            case INPUT_EXP -> new InputExpression();
-                        };
-                    }
-                    throw new IllegalArgumentException("Cannot resolve expression: " + token.getKey().name());
-                })
-                .orElse(tryToGuessAtomic(str));
+                            Matcher matcher = token.getValue().matcher(str);
+                            if (matcher.find()) {
+                                return switch (token.getKey()) {
+                                    case EXP_BOX -> new BoxExpression(tryToGuessExpression(matcher.group(1)));
+                                    case EXP_PLUS_EXP ->
+                                            new PlusExpression(tryToGuessExpression(matcher.group(1)), tryToGuessExpression(matcher.group(2)));
+                                    case EXP_MINUS_EXP ->
+                                            new MinusExpression(tryToGuessExpression(matcher.group(1)), tryToGuessExpression(matcher.group(2)));
+                                    case EXP_MULTI_EXP ->
+                                            new MultiExpression(tryToGuessExpression(matcher.group(1)), tryToGuessExpression(matcher.group(2)));
+                                    case EXP_DIV_EXP ->
+                                            new DivExpression(tryToGuessExpression(matcher.group(1)), tryToGuessExpression(matcher.group(2)));
+                                    case EXP_EQ_EXP ->
+                                            new EqualExpression(tryToGuessExpression(matcher.group(1)), tryToGuessExpression(matcher.group(2)));
+                                    case EXP_GRT_EXP ->
+                                            new GreaterExpression(tryToGuessExpression(matcher.group(1)), tryToGuessExpression(matcher.group(2)));
+                                };
+                            }
+                            throw new IllegalArgumentException("Cannot resolve expression: " + token.getKey().name());
+                        }
+                ).orElseGet(() -> tryToGuessAtomic(str));
     }
 
     private static AtomicExpression tryToGuessAtomic(String str) {
@@ -189,7 +189,8 @@ public class TIPLexer {
                 .stream()
                 .filter(token -> {
                     Matcher matcher = token.getValue().matcher(str);
-                    return matcher.find();
+                    // should be full match
+                    return matcher.find() && matcher.group(0).equals(str);
                 })
                 .findFirst()
                 .map(token -> {
@@ -198,9 +199,10 @@ public class TIPLexer {
                         return switch (token.getKey()) {
                             case ID -> new IdExpression(matcher.group(1));
                             case INT -> new IntExpression(matcher.group(1));
+                            case INPUT -> new InputExpression();
                         };
                     }
-                    throw new IllegalArgumentException("Cannot resolve atomic expression: " + token.getKey().name());
+                    throw new IllegalArgumentException("Unexpected token: " + token.getKey().name());
                 })
                 .orElseThrow(() -> new CannotRecognizeTokenException(str));
     }

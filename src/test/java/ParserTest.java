@@ -1,3 +1,4 @@
+import exception.CannotRecognizeTokenException;
 import exception.LexicalException;
 import exception.UnexpectedElseStatement;
 import exception.UnrecognizedTokenException;
@@ -165,11 +166,28 @@ class ParserTest {
                         output x;
                     }
                 } else {
-                    while (input < 10) {
+                    while (input > 10) {
                         output 0;
                     }
                 } 
                 """;
         assertDoesNotThrow(() -> payload(code));
+    }
+
+    @Test
+    void test13() {
+        String code = """
+                x = 10;           
+                if (x > input) { 
+                    while (input > 10) {
+                        output x;
+                    }
+                } else {
+                    while (input < 10) {
+                        output 0;
+                    }
+                } 
+                """;
+        assertThrows(UnrecognizedTokenException.class, () -> payload(code));
     }
 }

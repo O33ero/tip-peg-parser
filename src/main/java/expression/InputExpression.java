@@ -3,7 +3,7 @@ package expression;
 import lombok.Getter;
 
 @Getter
-public class InputExpression implements Expression {
+public class InputExpression implements AtomicExpression {
     private final String value = "input";
 
     @Override

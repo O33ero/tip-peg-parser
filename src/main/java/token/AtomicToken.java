@@ -8,7 +8,8 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 public enum AtomicToken implements Token {
     INT("INT", "([a-zA-Z]+)"),    // Int
-    ID("ID", "([0-9]+)")          // Id
+    ID("ID", "([\\-0-9]+)"),          // Id
+    INPUT("INPUT", "input")       // input
     ;
 
     @Getter
