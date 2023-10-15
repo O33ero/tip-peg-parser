@@ -16,7 +16,7 @@ public enum StmToken implements Token {
     WHILE_EXP("WHILE_EXP_THEN_STM", "while \\( (.*) \\)"),
     END_STM("WHILE_EXP_THEN_STM", "\\{(.*)\\}"),
     ID_EQ_EXP("ID_EQ_EXP", "([a-zA-Z]+) \\= (.*) ;"),
-    IO_EXP("IO_EXP", "(input|output) (.*) ;")
+    OUTPUT_EXP("OUTPUT_EXP", "(output) (.*) ;")
     ;
 
     private final String name;

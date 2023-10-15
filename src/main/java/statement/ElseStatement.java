@@ -19,7 +19,7 @@ public class ElseStatement implements StatementContainer {
 
     @Override
     public String toString() {
-        return String.format("else { %s ", body);
+        return String.format("else %s ", body);
     }
 
     @Override

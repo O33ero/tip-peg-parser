@@ -137,4 +137,17 @@ class ParserTest {
                 """;
         assertDoesNotThrow(() -> payload(code));
     }
+
+    @Test
+    void test11() {
+        String code = """
+                x = 10;           
+                if (x > input)   { 
+                    output x;
+                } else {
+                    output 0;
+                } 
+                """;
+        assertDoesNotThrow(() -> payload(code));
+    }
 }

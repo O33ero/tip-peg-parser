@@ -140,7 +140,7 @@ public class TIPLexer {
                                     case IF_EXP -> new IfStatement(tryToGuessExpression(matcher.group(1)));
                                     case WHILE_EXP -> new WhileStatement(tryToGuessExpression(matcher.group(1)));
                                     case IF_ELSE -> new ElseStatement();
-                                    case IO_EXP -> new IOStatement(matcher.group(1), tryToGuessExpression(matcher.group(2)));
+                                    case OUTPUT_EXP -> new OutputExpression(matcher.group(1), tryToGuessExpression(matcher.group(2)));
                                     case END_STM -> new EndBodyStatement();
                                     case ID_EQ_EXP ->
                                             new EqualStatement(matcher.group(1), tryToGuessExpression(matcher.group(2)));
@@ -176,6 +176,7 @@ public class TIPLexer {
                                     new EqualExpression(tryToGuessExpression(matcher.group(1)), tryToGuessExpression(matcher.group(2)));
                             case EXP_GRT_EXP ->
                                     new GreaterExpression(tryToGuessExpression(matcher.group(1)), tryToGuessExpression(matcher.group(2)));
+                            case INPUT_EXP -> new InputExpression();
                         };
                     }
                     throw new IllegalArgumentException("Cannot resolve expression: " + token.getKey().name());

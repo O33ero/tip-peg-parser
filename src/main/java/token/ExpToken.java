@@ -17,6 +17,7 @@ public enum ExpToken implements Token {
     EXP_GRT_EXP("(.*) \\> (.*)"),         // Exp > Exp
     EXP_EQ_EXP("(.*) == (.*)"),         // Exp == Exp
     EXP_BOX("\\( (.*) \\)"),            // ( Exp )
+    INPUT_EXP("(input)")                     // input
     ;
 
     @Getter
