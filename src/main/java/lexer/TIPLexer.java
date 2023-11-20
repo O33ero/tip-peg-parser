@@ -25,8 +25,8 @@ public class TIPLexer {
     }
 
     public static RootStatement tokenize(Stream<String> lines) {
-        List<String> flatedLines = lineFlatter(lines).toList();
-        List<Statement> statementToken = statementLexer(flatedLines);
+        List<String> flattedLines = lineFlatter(lines).toList();
+        List<Statement> statementToken = statementLexer(flattedLines);
         RootStatement rootStatement = statementGrouper(statementToken);
 
         return rootStatement;

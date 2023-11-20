@@ -7,6 +7,7 @@ import statement.RootStatement;
 import statement.Statement;
 import tree.ASTree;
 import tree.ASTreeBuilder;
+import type.UnionFind;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +21,7 @@ class ParserTest {
         List<Statement> lexer = TIPLexer.statementLexer(flat);
         RootStatement root = TIPLexer.statementGrouper(lexer);
 
+        UnionFind unionFind = UnionFind.of(root);
         ASTree tree = ASTreeBuilder.build(root);
 
         System.out.println("Flat: " + flat);
